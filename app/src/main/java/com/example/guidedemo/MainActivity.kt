@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
                 addGuideView(TestControllerGuideView.newInstance(this@MainActivity, targetView))
                 addGuideView(TestControllerGuideView.newInstance(this@MainActivity, rect))
                 addGuideView(CircleGuideView.newInstance(this@MainActivity, targetView))
+                // 派大星引导
+                addGuideView(StarfishGuideView.newInstance(this@MainActivity, targetView))
                 // 添加箭头引导
                 addGuideView(
                     HolderGuideView.newInstance(
