@@ -1,5 +1,6 @@
 package com.example.guidedemo
 
+import android.content.Context
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +11,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.guide.*
+import com.example.guide.GuideDialog
+import com.example.guide.HolderGuideView
+import com.example.guide.IMaskRect
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +45,19 @@ class MainActivity : AppCompatActivity() {
                 addGuideView(
                     HolderGuideView.newInstance(
                         this@MainActivity, targetView, getArrowLayout(this)
+                    )
+                )
+                // 添加OK引导
+                addGuideView(
+                    HolderGuideView.newInstance(
+                        this@MainActivity, IMaskRect.Rect(
+                            RectF(
+                                this@MainActivity.btn.left.toFloat(),
+                                this@MainActivity.btn.top.toFloat() - 50f,
+                                this@MainActivity.btn.left.toFloat() + dip2px(120f),
+                                this@MainActivity.btn.top.toFloat() + dip2px(120f) - 50f
+                            )
+                        ), getOkLayout(this)
                     )
                 )
 
@@ -108,6 +124,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private fun getOkLayout(guide: GuideDialog): ConstraintLayout =
+        (LayoutInflater.from(this@MainActivity)
+            .inflate(R.layout.guide_ok, null, false) as ConstraintLayout).apply {
+            findViewById<ImageView>(R.id.img).setOnClickListener {
+                guide.preGuide()
+            }
+            setOnClickListener {
+                guide.nextGuide()
+            }
+        }
+
     private fun getDialogLayout(guide: GuideDialog): ConstraintLayout =
         (LayoutInflater.from(this@MainActivity)
             .inflate(R.layout.guide_dialog, null, false) as ConstraintLayout).apply {
@@ -136,5 +163,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    fun dip2px(dpValue: Float): Int {
+        val scale = resources.displayMetrics.density
+        return (dpValue * scale + 0.5f).toInt()
     }
 }
